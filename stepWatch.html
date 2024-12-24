@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #A294F9;
+    }
+    #timer {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #6200ea;
+      color: white;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #3700b3;
+    }
+    button:active {
+      background-color: #03dac6;
+    }
+  </style>
+</head>
+<body>
+  <div id="timer">00:00:00</div>
+  <button id="start">Start</button>
+  <button id="stop">Stop</button>
+  <button id="reset">Reset</button>
+
+  <script>
+   
+    let elapsedTime = 0;
+    let intervalId = null;
+    let isRunning = false;
+
+    
+    const timerDisplay = document.getElementById('timer');
+    const startButton = document.getElementById('start');
+    const stopButton = document.getElementById('stop');
+    const resetButton = document.getElementById('reset');
+
+    function formatTime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+      const seconds = String(totalSeconds % 60).padStart(2, '0');
+      return `${hours}:${minutes}:${seconds}`;
+    }
+
+  
+    function updateDisplay() {
+      timerDisplay.textContent = formatTime(elapsedTime);
+    }
+
+   
+    startButton.addEventListener('click', () => {
+      if (isRunning) return;
+      isRunning = true;
+      const startTime = Date.now() - elapsedTime;
+      intervalId = setInterval(() => {
+        elapsedTime = Date.now() - startTime;
+        updateDisplay();
+      }, 1000);
+    });
+
+    
+    stopButton.addEventListener('click', () => {
+      if (!isRunning) return;
+      isRunning = false;
+      clearInterval(intervalId);
+    });
+
+   
+    resetButton.addEventListener('click', () => {
+      isRunning = false;
+      clearInterval(intervalId);
+      elapsedTime = 0;
+      updateDisplay();
+    });
+
+   
+    updateDisplay();
+  </script>
+</body>
+</html>
+
